@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import pandas as pd
 import numpy as np
 import json
+from fastapi import Request
 
 
 # Load telemetry JSON from project root
@@ -53,3 +54,22 @@ def latency_metrics(req: LatencyRequest):
 @app.get("/api/latency/health")
 def health():
     return {"ok": True}
+
+
+@app.post("/{full_path:path}")
+async def catch_all(full_path: str, request: Request):
+    """Catch-all POST handler: try to parse the incoming JSON as LatencyRequest and forward to latency_metrics."""
+    try:
+        body = await request.json()
+    except Exception:
+        return {"detail": "invalid json body"}
+
+    # If this looks like the latency request, forward to the handler
+    if isinstance(body, dict) and 'regions' in body and 'threshold_ms' in body:
+        try:
+            req = LatencyRequest(**body)
+        except Exception as e:
+            return {"detail": f"invalid payload: {e}"}
+        return latency_metrics(req)
+
+    return {"detail": "not found"}
