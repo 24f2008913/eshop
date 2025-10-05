@@ -30,7 +30,7 @@ class LatencyRequest(BaseModel):
     regions: list[str]
     threshold_ms: float
 
-@app.post("/latency")
+@app.post("/")
 def latency_metrics(req: LatencyRequest):
     result = {}
     for region in req.regions:
