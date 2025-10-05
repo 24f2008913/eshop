@@ -47,3 +47,9 @@ def latency_metrics(req: LatencyRequest):
             "breaches": int(breaches)
         }
     return result
+
+
+@app.get("/health")
+@app.get("/api/latency/health")
+def health():
+    return {"ok": True}
