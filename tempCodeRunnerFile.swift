@@ -1,9 +1,0 @@
-import requests
-
-url = "https://eshop-latency-7zrq02455-jayanarayan-menon-nettaths-projects.vercel.app/api/latency"
-payload = {
-    "regions": ["amer","apac"],
-    "threshold_ms": 154
-}
-response = requests.post(url, json=payload)
-print(response.json())
