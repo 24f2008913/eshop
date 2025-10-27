@@ -2,15 +2,20 @@ name: Daily Commit Action
 
 on:
   schedule:
-    - cron: "30 7 * * *"  # runs every day at 07:30 UTC
-  workflow_dispatch:  # allows manual trigger
+    # Runs every day at 07:30 UTC
+    - cron: "30 7 * * *"
+  workflow_dispatch:
 
 jobs:
   daily_commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # ✅ allows committing and pushing
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Add daily commit (24f2008913@ds.study.iitm.ac.in)
         run: |
